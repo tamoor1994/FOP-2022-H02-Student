@@ -7,7 +7,7 @@ plugins {
 }
 
 submit {
-  assignmentId = "H02" // do not change assignmentId
+  assignmentId = "h02" // do not change assignmentId
   studentId = null // TU-ID  z.B. "ab12cdef"
   firstName = null
   lastName = null
@@ -38,7 +38,7 @@ java {
 }
 
 application {
-  mainClass.set("H02.Main")
+  mainClass.set("h02.Main")
 }
 
 tasks {
