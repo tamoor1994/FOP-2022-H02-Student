@@ -50,7 +50,7 @@ tasks {
     enabled = false // only enable shadowJar
   }
   shadowJar {
-    archiveFileName.set("h01-nicht-abgeben.jar")
+    archiveFileName.set("h02-nicht-abgeben.jar")
   }
   test {
     useJUnitPlatform()
