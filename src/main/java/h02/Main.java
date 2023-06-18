@@ -1,5 +1,6 @@
 package h02;
 
+import fopbot.Direction;
 import fopbot.Robot;
 import fopbot.World;
 
@@ -21,7 +22,7 @@ public class Main {
     World.setDelay(10);
     World.setVisible(true);
     System.out.println("Size of world: " + cols + "x" + rows);
-    // Hier programmieren
+    Robot[] allRobots = initializeRobots(cols, rows);
   }
 
   /**
@@ -32,7 +33,14 @@ public class Main {
    * @return correctly initialized allRobots array (i.e. correct size, correct positions, correct directions)
    */
   public static Robot[] initializeRobots(int cols, int rows) {
-    return null;
+    int minimum = Math.min(cols, rows);
+    int numberOfRobts = (minimum % 2 == 0) ? minimum : minimum - 1;
+    Robot[] allRobots = new Robot[numberOfRobts];
+
+    for (int i = 0; i < numberOfRobts; i++) {
+        allRobots[i] = new Robot(i, i, (i < numberOfRobts / 2) ? Direction.RIGHT : Direction.LEFT, 1000);
+    }
+    return allRobots;
   }
 
   /**
@@ -45,7 +53,12 @@ public class Main {
    * @return correctly initialized paces array (i.e. correct size, filled w/ random integers from [1...5])
    */
   public static int[] initializePaces(Robot[] allRobots) {
-    return null;
+    int arraySize = allRobots.length;
+    int[] paces = new int[arraySize];
+    for (int i = 0; i < arraySize; i++) {
+      paces[i] = ThreadLocalRandom.current().nextInt(1, 6);
+    }
+    return paces;
   }
 
   /**
