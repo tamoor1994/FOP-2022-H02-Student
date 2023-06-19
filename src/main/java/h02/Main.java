@@ -4,6 +4,7 @@ import fopbot.Direction;
 import fopbot.Robot;
 import fopbot.World;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
@@ -23,6 +24,30 @@ public class Main {
     World.setVisible(true);
     System.out.println("Size of world: " + cols + "x" + rows);
     Robot[] allRobots = initializeRobots(cols, rows);
+    int[] paces = initializePaces(allRobots);
+
+    int counter = 0;
+    //Hauptschleife
+
+    while (allRobots.length > 0) {
+      counter++;
+
+      // Aufgabe 3.1:
+      moveForward(allRobots, paces);
+
+      // Aufgabe 3.2:
+      if (allRobots.length > 2) {
+        int[] distArray = generateThreeDistinctInts(allRobots);
+        swapPaces(paces, distArray[0], distArray[1], distArray[2]);
+      }
+
+      // Aufgabe 3.3:
+      if (counter % NUMBER_OF_STEPS_BETWEEN_REDUCTIONS == 0) {
+        int deleteIndex = ThreadLocalRandom.current().nextInt(allRobots.length);
+        allRobots = reduceRobots(allRobots, deleteIndex);
+        paces = reducePaces(paces, deleteIndex);
+      }
+    }
   }
 
   /**
@@ -68,6 +93,14 @@ public class Main {
    * @param paces     corresponding paces array to allRobots
    */
   public static void moveForward(Robot[] allRobots, int[] paces) {
+    for (int i = 0; i < allRobots.length; i++) {
+      for (int j = 0; j < paces[i]; j++) {
+        while (!allRobots[i].isFrontClear()) {
+          allRobots[i].turnLeft();
+        }
+        allRobots[i].move();
+      }
+    }
   }
 
   /**
@@ -77,7 +110,19 @@ public class Main {
    * @return array containing three distinct integers as described above
    */
   public static int[] generateThreeDistinctInts(Robot[] allRobots) {
-    return null;
+    int numberOfRobots = allRobots.length;
+    int i0 = ThreadLocalRandom.current().nextInt(numberOfRobots);
+    int i1 = ThreadLocalRandom.current().nextInt(numberOfRobots);
+
+    while (i0 == i1) {
+      i0 = ThreadLocalRandom.current().nextInt(numberOfRobots);
+    }
+    int i2 = ThreadLocalRandom.current().nextInt(numberOfRobots);
+    while (i0 == i2 || i1 == i2) {
+      i2 = ThreadLocalRandom.current().nextInt(numberOfRobots);
+    }
+
+    return new int[] {i0, i1, i2};
   }
 
   /**
@@ -92,7 +137,33 @@ public class Main {
    * @return sorted array of i1, i2, i3 in ascending order
    */
   public static int[] orderThreeInts(int i1, int i2, int i3) {
-    return null;
+    int[] sortedArray = {i1, i2, i3};
+    Arrays.sort(sortedArray);
+    return sortedArray;
+
+
+    /*
+    Alternative Lösung:
+    int tmp;
+
+    if (i2 < i1) {
+      tmp = i2;
+      i2 = i1;
+      i1 = tmp;
+    }
+
+    if (i3 < i2) {
+      tmp = i3;
+      i3 = i1;
+      i1 = tmp;
+    }
+
+    if (i3 < i2) {
+      tmp = i2;
+      i2 = i3;
+      i3 = tmp;
+    }
+     */
   }
 
   /**
@@ -109,7 +180,17 @@ public class Main {
    * @return paces array with identical entries as before, but in order as described in exercise sheet
    */
   public static int[] swapPaces(int[] paces, int i1, int i2, int i3) {
-    return null;
+    int[] sortedArray = orderThreeInts(i1, i2, i3);
+    i1 = sortedArray[0];
+    i2 = sortedArray[1];
+    i3 = sortedArray[3];
+
+    int[] sortedPaces = orderThreeInts(i1, i2, i3);
+    paces[i1] = sortedPaces[0];
+    paces[i2] = sortedPaces[1];
+    paces[i3] = sortedPaces[2];
+
+    return paces;
   }
 
   /**
@@ -124,7 +205,19 @@ public class Main {
    * @return reduced array (as described above)
    */
   public static Robot[] reduceRobots(Robot[] allRobots, int deleteIndex) {
-    return null;
+    int newLenght = allRobots.length - 1;
+    Robot[] newRobots = new Robot[newLenght];
+    int newIndex = 0;
+
+    for (int i = 0; i < allRobots.length; i++) {
+      if (i == deleteIndex) {
+        continue;
+      }
+      newRobots[newIndex] = allRobots[i];
+      newIndex++;
+    }
+
+    return newRobots;
   }
 
   /**
@@ -139,6 +232,18 @@ public class Main {
    * @return reduced array (as described above)
    */
   public static int[] reducePaces(int[] paces, int deleteIndex) {
-    return null;
+    int newSize = paces.length - 1;
+    int[] newArray = new int[newSize];
+    int newCounter = 0;
+
+    for (int i = 0; i < paces.length; i++) {
+      if (i == deleteIndex) {
+        continue;
+      }
+      newArray[newSize] = paces[i];
+      newCounter++;
+    }
+
+    return newArray;
   }
 }
